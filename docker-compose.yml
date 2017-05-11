@@ -1,0 +1,37 @@
+version: '2'
+services:
+  chatdemo:
+    build:
+      context: .
+      dockerfile: Dockerfile.chatdemo
+    image: chatdemo:0.1 
+#    volumes:
+#     - .:/srv
+    ports:
+     - "8888:8888"
+    networks:
+      loadtest:
+        aliases:
+         - chatdemo
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    image: client:0.1
+    depends_on:
+      - chatdemo
+    environment:
+      - WS_URL=ws://chatdemo:8888/chatsocket
+      - N_CLIENTS=1000
+#    volumes:
+#     - .:/srv
+#    entrypoint: ["/usr/bin/curl", "http://chatdemo:8888"]
+    networks:
+      loadtest:
+        aliases:
+         - client
+
+networks:
+  loadtest:
+

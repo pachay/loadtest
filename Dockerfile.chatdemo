@@ -1,0 +1,13 @@
+FROM python:2.7
+MAINTAINER Andrey Pachay <pachay@magneta.ai>
+
+RUN pip install --upgrade pip && pip install tornado
+
+COPY chatdemo.py /srv/chatdemo.py
+COPY templates /srv/templates
+COPY static /srv/static
+
+WORKDIR /srv
+
+CMD ["python", "/srv/chatdemo.py"]
+

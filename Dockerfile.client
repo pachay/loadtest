@@ -1,0 +1,11 @@
+FROM python:2.7
+MAINTAINER Andrey Pachay <pachay@magneta.ai>
+
+RUN pip install --upgrade pip && pip install websocket-client
+
+COPY client.py /srv/client.py
+
+WORKDIR /srv
+
+CMD ["python", "/srv/client.py"]
+
