@@ -5,11 +5,8 @@ import time
 import os
 
 
-# ws_url = "ws://chatdemo:8888/chatsocket"
 ws_url = os.getenv('WS_URL')
 n_clients = int(os.getenv('N_CLIENTS'))
-
-# ws.send(json.dumps({'body': '123456722222'}))
 
 class Client(object):
     def __init__(self, ws_url):
