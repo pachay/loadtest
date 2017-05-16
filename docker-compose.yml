@@ -1,18 +1,50 @@
 version: '2'
 services:
-  chatdemo:
+  chatdemo1:
     build:
       context: .
       dockerfile: Dockerfile.chatdemo
     image: chatdemo:0.1 
-#    volumes:
-#     - .:/srv
     ports:
      - "8888:8888"
     networks:
       loadtest:
         aliases:
+         - chatdemo1
+
+
+  chatdemo2:
+    build:
+      context: .
+      dockerfile: Dockerfile.chatdemo
+    image: chatdemo:0.1
+    entrypoint: ["python", "/srv/chatdemo.py", "--port=8889"]
+    ports:
+     - "8889:8889"
+    networks:
+      loadtest:
+        aliases:
+         - chatdemo2
+
+
+  nginx_api:
+    build: ./nginx/
+    volumes:
+      - ./nginx/chatdemo.template:/etc/nginx/conf.d/chatdemo.template
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - chatdemo1
+      - chatdemo2
+    env_file:
+      - ./common.env
+    command: /bin/sh -c "envsubst '$$NGINX_HOST $$NGINX_PORT' < /etc/nginx/conf.d/chatdemo.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    networks:
+      loadtest:
+        aliases:
          - chatdemo
+
 
   client:
     build:
@@ -20,13 +52,10 @@ services:
       dockerfile: Dockerfile.client
     image: client:0.1
     depends_on:
-      - chatdemo
+      - nginx_api
     environment:
-      - WS_URL=ws://chatdemo:8888/chatsocket
-      - N_CLIENTS=1000
-#    volumes:
-#     - .:/srv
-#    entrypoint: ["/usr/bin/curl", "http://chatdemo:8888"]
+      - WS_URL=ws://chatdemo/chatsocket
+      - N_CLIENTS=5000
     networks:
       loadtest:
         aliases:
