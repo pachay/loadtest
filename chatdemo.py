@@ -55,6 +55,7 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
     waiters = set()
     cache = []
     cache_size = 200
+    n_messages = 0
 
     def get_compression_options(self):
         # Non-None enables compression with default options.
@@ -93,6 +94,8 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 
         ChatSocketHandler.update_cache(chat)
         ChatSocketHandler.send_updates(chat)
+        self.n_messages += 1
+        logging.info("N of messages processed %s" % self.n_messages)
 
 
 def main():

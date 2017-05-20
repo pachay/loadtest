@@ -55,7 +55,8 @@ services:
       - nginx_api
     environment:
       - WS_URL=ws://chatdemo/chatsocket
-      - N_CLIENTS=5000
+      - N_CLIENTS=100
+      - DURATION=30
     networks:
       loadtest:
         aliases:
