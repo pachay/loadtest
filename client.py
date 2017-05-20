@@ -29,7 +29,7 @@ start = time.time()
 while True:
     for client in clients:
         client.send()
-        print 'Message sent'
+        # print 'Message sent'
         if time.time() - start > duration:
             exit()
 
