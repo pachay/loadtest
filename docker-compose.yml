@@ -56,7 +56,7 @@ services:
     environment:
       - WS_URL=ws://chatdemo/chatsocket
       - N_CLIENTS=100
-      - DURATION=30
+      - DURATION=180
     networks:
       loadtest:
         aliases:
